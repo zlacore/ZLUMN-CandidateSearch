@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react';
-import { searchGithub, searchGithubUser } from '../api/API';
-
+import { searchGithubUser } from '../api/API';
+import type { Candidate } from '../interfaces/Candidate.interface';
 const CandidateSearch = () => {
   // Write code to:
   // - Search for candidate
 
   const [username, searchUsername] = useState('')
-
-  function searchBar () {
+  const [potentialCans, saveCans] = useState<(Candidate | null)[]>([])
+  function searchBar() {
     return (
       <>
-      <input
-      value={username}
-      onChange={(e) => searchUsername(e.target.value)}>
-      </input>
-      <button type='submit'>Search</button>
+        <input
+          value={username}
+          onChange={(e) => searchUsername(e.target.value)}>
+        </input>
+        <button type='submit'>Search</button>
       </>
     )
   }
-const userSearch = async () => {
-  const userData = await searchGithubUser(username)
+  const userSearch = async () => {
+    const userData = await searchGithubUser(username)
     const candidate: Candidate = {
       img: userData.avatar_url,
       login: userData.login,
@@ -27,52 +27,68 @@ const userSearch = async () => {
       email: userData.email,
       company: userData.company,
       bio: userData.bio
+    }
+    console.log(candidate);
+    return candidate
   }
-  console.log(candidate);
-  return candidate
-}
 
-// const getRandomUsers = async () => {
-//   const randomUserData = await searchGithub()
-//   const candidate: Candidate = {
-//     img: randomUserData.avatar_url,
-//     login: randomUserData.login,
-//     location: randomUserData.location,
-//     email: randomUserData.email,
-//     company: randomUserData.company,
-//     bio: randomUserData.bio
-//   }
-//   return candidate
-// }
+  // const getRandomUsers = async () => {
+  //   const randomUserData = await searchGithub()
+  //   const candidate: Candidate = {
+  //     img: randomUserData.avatar_url,
+  //     login: randomUserData.login,
+  //     location: randomUserData.location,
+  //     email: randomUserData.email,
+  //     company: randomUserData.company,
+  //     bio: randomUserData.bio
+  //   }
+  //   return candidate
+  // }
 
-///// Code assisted by Xpert Learning Assistant ///////////////
-const [candidate, setCandidate] = useState<Candidate | null>(null);
 
-useEffect(() => {
-  if (username) {
-    userSearch().then((data) => {
-      setCandidate(data); // Update state with the candidate data
-    });
+  const saveCandidate = () => {
+    const newArr = [...potentialCans, candidate];
+    saveCans(newArr);
+    localStorage.setItem('candidates', JSON.stringify(newArr))
   }
-}, [username]);
+  ///// Code assisted by Xpert Learning Assistant ///////////////
+  const [candidate, setCandidate] = useState<Candidate | null>(null);
 
-return (
-  <>
-    <h1>Candidate Search</h1>
-    {searchBar()}
-    {candidate && (
-      <div>
-        <img src={candidate.img} alt={candidate.login} />
-        <p>{candidate.login}</p>
-        <p>{candidate.email}</p>
-        <p>{candidate.location}</p>
-        <p>{candidate.company}</p>
-        <p>{candidate.bio}</p>
-      </div>
-    )}
-  </>
-);
-;
+  useEffect(() => {
+    if (username) {
+      userSearch().then((data) => {
+        setCandidate(data); // Update state with the candidate data
+      });
+    }
+  }, [username]);
+
+  return (
+    <>
+      <h1>Candidate Search</h1>
+      {searchBar()}
+      {candidate && (
+        <div>
+          <img src={candidate.img} alt={candidate.login} />
+          <p>{candidate.login}</p>
+          <p>{candidate.email}</p>
+          <p>{candidate.location}</p>
+          <p>{candidate.company}</p>
+          <p>{candidate.bio}</p>
+          <span>
+            <button onClick={saveCandidate}>
+              Accept
+            </button>
+          </span>
+          <span>
+            <button onClick={() => searchUsername('')}>
+            Reject
+            </button>
+          </span>
+        </div>
+      )}
+    </>
+  );
+  ;
 };
 
 export default CandidateSearch;
@@ -80,7 +96,9 @@ export default CandidateSearch;
 
 
 
-{/* <h1>Candidate Search</h1>
+{/* 
+  Old Code
+  <h1>Candidate Search</h1>
 {searchBar()}
 
 {useEffect(() => {

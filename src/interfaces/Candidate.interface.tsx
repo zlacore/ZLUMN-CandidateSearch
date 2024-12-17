@@ -8,4 +8,11 @@ interface Candidate {
     company: string;
     bio: string;
     accepted?: boolean;
+    avatar_url?: string;
 }
+
+interface SavedCandidatesProps {
+    candidates: Candidate[]
+}
+
+export type { Candidate, SavedCandidatesProps }

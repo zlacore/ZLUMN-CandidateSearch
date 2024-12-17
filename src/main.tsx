@@ -6,11 +6,12 @@ import App from './App.tsx';
 import CandidateSearch from './pages/CandidateSearch.tsx';
 import SavedCandidates from './pages/SavedCandidates.tsx';
 import ErrorPage from './pages/ErrorPage.tsx';
+import RandomCandidates from './pages/RandomCandidates.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App/>,
+    element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
         path: '/SavedCandidates',
         element: <SavedCandidates />,
       },
+      {
+        path: '/RandomCandidates',
+        element: <RandomCandidates />
+      }
     ],
   },
 ]);

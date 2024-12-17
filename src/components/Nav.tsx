@@ -28,6 +28,16 @@ const Nav = () => {
             </Link>
           </h2>
         </li>
+        <li className='nav-item'>
+          <h2>
+            <Link
+              to='/RandomCandidates'
+              className={currentPage === '/RandomCandidates' ? 'nav-link active' : 'nav-link'}
+            >
+              Find Candidates
+            </Link>
+          </h2>
+        </li>
       </ul>
     </nav>
   );
